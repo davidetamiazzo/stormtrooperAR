@@ -1,0 +1,605 @@
+{
+   materials: [
+      {
+         name: "Helmet",
+         parameters: [
+            {
+               baseColorFactor: [
+                  1,
+                  1,
+                  1,
+                  1,
+               ],
+            },
+            {
+               baseColor: "Helmet_baseColor",
+            },
+            {
+               normal: "Helmet_normal",
+            },
+            {
+               metallicFactor: 0,
+            },
+            {
+               roughnessFactor: 0.59999999999999998,
+            },
+            {
+               metallicRoughness: null,
+            },
+            {
+               occlusion: null,
+            },
+            {
+               emissiveFactor: [
+                  0,
+                  0,
+                  0,
+                  1,
+               ],
+            },
+            {
+               emissive: null,
+            },
+            {
+               reflectance: 0.5,
+            },
+            {
+               opacity: null,
+            },
+         ],
+         source: "build/sceneform_sdk/default_materials/gltf_material.sfm",
+      },
+      {
+         name: "Rubber_joints",
+         parameters: [
+            {
+               baseColorFactor: [
+                  1,
+                  1,
+                  1,
+                  1,
+               ],
+            },
+            {
+               baseColor: "Rubber_joints_baseColor",
+            },
+            {
+               normal: "Rubber_joints_normal",
+            },
+            {
+               metallicFactor: 0,
+            },
+            {
+               roughnessFactor: 0.80000000000000004,
+            },
+            {
+               metallicRoughness: null,
+            },
+            {
+               occlusion: null,
+            },
+            {
+               emissiveFactor: [
+                  0,
+                  0,
+                  0,
+                  1,
+               ],
+            },
+            {
+               emissive: null,
+            },
+            {
+               reflectance: 0.5,
+            },
+            {
+               opacity: null,
+            },
+         ],
+         source: "build/sceneform_sdk/default_materials/gltf_material.sfm",
+      },
+      {
+         name: "NST_15_-_Default",
+         parameters: [
+            {
+               baseColorFactor: [
+                  0.021808000000000001,
+                  0.021808000000000001,
+                  0.021808000000000001,
+                  1,
+               ],
+            },
+            {
+               baseColor: null,
+            },
+            {
+               normal: null,
+            },
+            {
+               metallicFactor: 0.56999999999999995,
+            },
+            {
+               roughnessFactor: 0.75,
+            },
+            {
+               metallicRoughness: null,
+            },
+            {
+               occlusion: null,
+            },
+            {
+               emissiveFactor: [
+                  0,
+                  0,
+                  0,
+                  1,
+               ],
+            },
+            {
+               emissive: null,
+            },
+            {
+               reflectance: 0.5,
+            },
+            {
+               opacity: null,
+            },
+         ],
+         source: "build/sceneform_sdk/default_materials/gltf_material.sfm",
+      },
+      {
+         name: "1_-_Default",
+         parameters: [
+            {
+               baseColorFactor: [
+                  1,
+                  1,
+                  1,
+                  1,
+               ],
+            },
+            {
+               baseColor: "1_-_Default_baseColor",
+            },
+            {
+               normal: "1_-_Default_normal",
+            },
+            {
+               metallicFactor: 1,
+            },
+            {
+               roughnessFactor: 0.34999999999999998,
+            },
+            {
+               metallicRoughness: null,
+            },
+            {
+               occlusion: null,
+            },
+            {
+               emissiveFactor: [
+                  0,
+                  0,
+                  0,
+                  1,
+               ],
+            },
+            {
+               emissive: null,
+            },
+            {
+               reflectance: 0.5,
+            },
+            {
+               opacity: null,
+            },
+         ],
+         source: "build/sceneform_sdk/default_materials/gltf_material.sfm",
+      },
+      {
+         name: "2_-_Default",
+         parameters: [
+            {
+               baseColorFactor: [
+                  1,
+                  1,
+                  1,
+                  1,
+               ],
+            },
+            {
+               baseColor: "2_-_Default_baseColor",
+            },
+            {
+               normal: null,
+            },
+            {
+               metallicFactor: 1,
+            },
+            {
+               roughnessFactor: 0.34999999999999998,
+            },
+            {
+               metallicRoughness: null,
+            },
+            {
+               occlusion: null,
+            },
+            {
+               emissiveFactor: [
+                  0,
+                  0,
+                  0,
+                  1,
+               ],
+            },
+            {
+               emissive: null,
+            },
+            {
+               reflectance: 0.5,
+            },
+            {
+               opacity: null,
+            },
+         ],
+         source: "build/sceneform_sdk/default_materials/gltf_material.sfm",
+      },
+      {
+         name: "4_-_Default",
+         parameters: [
+            {
+               baseColorFactor: [
+                  1,
+                  1,
+                  1,
+                  1,
+               ],
+            },
+            {
+               baseColor: "4_-_Default_baseColor",
+            },
+            {
+               normal: null,
+            },
+            {
+               metallicFactor: 1,
+            },
+            {
+               roughnessFactor: 0.34999999999999998,
+            },
+            {
+               metallicRoughness: null,
+            },
+            {
+               occlusion: null,
+            },
+            {
+               emissiveFactor: [
+                  0,
+                  0,
+                  0,
+                  1,
+               ],
+            },
+            {
+               emissive: null,
+            },
+            {
+               reflectance: 0.5,
+            },
+            {
+               opacity: null,
+            },
+         ],
+         source: "build/sceneform_sdk/default_materials/gltf_material.sfm",
+      },
+      {
+         name: "5_-_Default",
+         parameters: [
+            {
+               baseColorFactor: [
+                  1,
+                  1,
+                  1,
+                  1,
+               ],
+            },
+            {
+               baseColor: "5_-_Default_baseColor",
+            },
+            {
+               normal: "5_-_Default_normal",
+            },
+            {
+               metallicFactor: 1,
+            },
+            {
+               roughnessFactor: 0.34999999999999998,
+            },
+            {
+               metallicRoughness: null,
+            },
+            {
+               occlusion: null,
+            },
+            {
+               emissiveFactor: [
+                  0,
+                  0,
+                  0,
+                  1,
+               ],
+            },
+            {
+               emissive: null,
+            },
+            {
+               reflectance: 0.5,
+            },
+            {
+               opacity: null,
+            },
+         ],
+         source: "build/sceneform_sdk/default_materials/gltf_material.sfm",
+      },
+      {
+         name: "6_-_Default",
+         parameters: [
+            {
+               baseColorFactor: [
+                  1,
+                  1,
+                  1,
+                  1,
+               ],
+            },
+            {
+               baseColor: "6_-_Default_baseColor",
+            },
+            {
+               normal: null,
+            },
+            {
+               metallicFactor: 1,
+            },
+            {
+               roughnessFactor: 0.34999999999999998,
+            },
+            {
+               metallicRoughness: null,
+            },
+            {
+               occlusion: null,
+            },
+            {
+               emissiveFactor: [
+                  0,
+                  0,
+                  0,
+                  1,
+               ],
+            },
+            {
+               emissive: null,
+            },
+            {
+               reflectance: 0.5,
+            },
+            {
+               opacity: null,
+            },
+         ],
+         source: "build/sceneform_sdk/default_materials/gltf_material.sfm",
+      },
+      {
+         name: "7_-_Default",
+         parameters: [
+            {
+               baseColorFactor: [
+                  1,
+                  1,
+                  1,
+                  1,
+               ],
+            },
+            {
+               baseColor: "7_-_Default_baseColor",
+            },
+            {
+               normal: null,
+            },
+            {
+               metallicFactor: 0,
+            },
+            {
+               roughnessFactor: 0.59999999999999998,
+            },
+            {
+               metallicRoughness: null,
+            },
+            {
+               occlusion: null,
+            },
+            {
+               emissiveFactor: [
+                  0,
+                  0,
+                  0,
+                  1,
+               ],
+            },
+            {
+               emissive: null,
+            },
+            {
+               reflectance: 0.5,
+            },
+            {
+               opacity: null,
+            },
+         ],
+         source: "build/sceneform_sdk/default_materials/gltf_material.sfm",
+      },
+      {
+         name: "8_-_Default",
+         parameters: [
+            {
+               baseColorFactor: [
+                  1,
+                  1,
+                  1,
+                  1,
+               ],
+            },
+            {
+               baseColor: "8_-_Default_baseColor",
+            },
+            {
+               normal: "8_-_Default_normal",
+            },
+            {
+               metallicFactor: 0,
+            },
+            {
+               roughnessFactor: 0.80000000000000004,
+            },
+            {
+               metallicRoughness: null,
+            },
+            {
+               occlusion: null,
+            },
+            {
+               emissiveFactor: [
+                  0,
+                  0,
+                  0,
+                  1,
+               ],
+            },
+            {
+               emissive: null,
+            },
+            {
+               reflectance: 0.5,
+            },
+            {
+               opacity: null,
+            },
+         ],
+         source: "build/sceneform_sdk/default_materials/gltf_material.sfm",
+      },
+   ],
+   model: {
+      attributes: [
+         "Position",
+         "TexCoord",
+         "Orientation",
+      ],
+      file: "sampledata/models/silverStorm/scene.gltf",
+      name: "scene",
+      scale: 0.0005,
+      suggested_collision: {
+         center: {
+            x: 0,
+            y: 0,
+            z: 0,
+         },
+         size: {
+            x: 1,
+            y: 1,
+            z: 1,
+         },
+         type: "Box",
+      },
+   },
+   samplers: [
+      {
+         file: "sampledata/models/silverStorm/textures/8_-_Default_baseColor.png",
+         name: "8_-_Default_baseColor",
+         pipeline_name: "textures/8_-_Default_baseColor.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/7_-_Default_baseColor.png",
+         name: "7_-_Default_baseColor",
+         pipeline_name: "textures/7_-_Default_baseColor.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/6_-_Default_baseColor.png",
+         name: "6_-_Default_baseColor",
+         pipeline_name: "textures/6_-_Default_baseColor.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/5_-_Default_normal.png",
+         name: "5_-_Default_normal",
+         params: {
+            usage_type: "Normal",
+         },
+         pipeline_name: "textures/5_-_Default_normal.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/4_-_Default_baseColor.png",
+         name: "4_-_Default_baseColor",
+         pipeline_name: "textures/4_-_Default_baseColor.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/2_-_Default_baseColor.png",
+         name: "2_-_Default_baseColor",
+         pipeline_name: "textures/2_-_Default_baseColor.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/1_-_Default_baseColor.png",
+         name: "1_-_Default_baseColor",
+         pipeline_name: "textures/1_-_Default_baseColor.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/Rubber_joints_normal.png",
+         name: "Rubber_joints_normal",
+         params: {
+            usage_type: "Normal",
+         },
+         pipeline_name: "textures/Rubber_joints_normal.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/5_-_Default_baseColor.png",
+         name: "5_-_Default_baseColor",
+         pipeline_name: "textures/5_-_Default_baseColor.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/1_-_Default_normal.png",
+         name: "1_-_Default_normal",
+         params: {
+            usage_type: "Normal",
+         },
+         pipeline_name: "textures/1_-_Default_normal.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/Rubber_joints_baseColor.png",
+         name: "Rubber_joints_baseColor",
+         pipeline_name: "textures/Rubber_joints_baseColor.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/8_-_Default_normal.png",
+         name: "8_-_Default_normal",
+         params: {
+            usage_type: "Normal",
+         },
+         pipeline_name: "textures/8_-_Default_normal.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/Helmet_normal.png",
+         name: "Helmet_normal",
+         params: {
+            usage_type: "Normal",
+         },
+         pipeline_name: "textures/Helmet_normal.png",
+      },
+      {
+         file: "sampledata/models/silverStorm/textures/Helmet_baseColor.png",
+         name: "Helmet_baseColor",
+         pipeline_name: "textures/Helmet_baseColor.png",
+      },
+   ],
+   version: "0.51:1",
+}
