@@ -15,11 +15,14 @@
  */
 package com.google.ar.sceneform.samples.hellosceneform;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.HitResult;
@@ -27,6 +30,7 @@ import com.google.ar.core.Plane;
 import com.google.ar.core.Plane.Type;
 import com.google.ar.core.Pose;
 import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
@@ -52,8 +56,15 @@ public class HelloSceneformActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_ux);
-
     arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
+    Button colorDetectionBu = findViewById(R.id.colorDetection);
+
+    //hide the button if the orientation is portrait
+    Configuration newConfig = getResources().getConfiguration();
+    if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
+    {
+        colorDetectionBu.setVisibility(View.GONE);
+    }
 /*
     // When you build a Renderable, Sceneform loads its resources in the background while returning
     // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
@@ -70,24 +81,6 @@ public class HelloSceneformActivity extends AppCompatActivity {
               return null;
             });
 
-
-      //trying to load stormtrooper renderable
-      ModelRenderable.builder()
-              .setSource(this, R.raw.silverstorm)
-              .build()
-              .thenAccept(renderable -> stormRenderable = renderable)
-              .exceptionally(
-                      throwable -> {
-                          Toast toast =
-                                  Toast.makeText(this, "Unable to load storm renderable", Toast.LENGTH_LONG);
-                          toast.setGravity(Gravity.CENTER, 0, 0);
-                          toast.show();
-                          return null;
-                      });
-
-                      */
-
-    /*
     arFragment.setOnTapArPlaneListener(
         (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
           if (andyRenderable == null) {
@@ -109,40 +102,6 @@ public class HelloSceneformActivity extends AppCompatActivity {
           andy.setRenderable(andyRenderable);
           andy.select();
         });
-        */
-
-    /*
-    //setting tap listener to create stormtrooper model
-      //we want to create only one model, and move it by sliding it
-      boolean firstTap = false;
-
-      arFragment.setOnTapArPlaneListener(
-              (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
-                  if (stormRenderable == null) {
-                      return;
-                  }
-
-                  if (plane.getType() != Type.HORIZONTAL_UPWARD_FACING) {
-                      return;
-                  }
-
-                  // Create the Anchor.
-                  Anchor anchor = hitResult.createAnchor();
-                  AnchorNode anchorNode = new AnchorNode(anchor);
-                  anchorNode.setParent(arFragment.getArSceneView().getScene());
-
-
-                  // Create the transformable stormtrooper and add it to the anchor.
-                  TransformableNode silverstorm = new TransformableNode(arFragment.getTransformationSystem());
-                  silverstorm.setParent(anchorNode);
-                  silverstorm.setRenderable(stormRenderable);
-                  silverstorm.select();
-
-                  //rotate vertically model
-                  anchor.getPose().makeRotation(20, 30, 50, 100);
-                  Log.e("tag", "quaternion: " + anchor.getPose().getRotationQuaternion()[1]);
-              });
-
         */
 
       //trying to load bb8 renderable
@@ -171,29 +130,27 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
                   // Create the Anchor.
                   Anchor anchor = hitResult.createAnchor();
-
-                  // Change the rotation since the 3d is facing downwards
                   AnchorNode anchorNode = new AnchorNode(anchor);
-
-                  float[] upAxis = plane.getCenterPose().getYAxis();
-                  Log.e(TAG, "upAxis" + upAxis[0] + upAxis[1] + upAxis[2]);
-                  Vector3 upDirection = new Vector3(upAxis[0], upAxis[1], upAxis[2]);
-                  anchorNode.setWorldPosition(upDirection);
-
-
                   anchorNode.setAnchor(anchor);
-
                   anchorNode.setParent(arFragment.getArSceneView().getScene());
 
+                  // Create the transformable node and add it to the anchor.
+                  TransformableNode tn = new TransformableNode(arFragment.getTransformationSystem());
+                  tn.setParent(anchorNode);
 
-                  // Create the transformable bb8 and add it to the anchor.
-                  TransformableNode bb8 = new TransformableNode(arFragment.getTransformationSystem());
-                  bb8.setParent(anchorNode);
+                  //We need to create an additional Node to tn to rotate the 3d model without rotating the transformation system
+                  Node bb8 = new Node();
+                  bb8.setParent(tn);
                   bb8.setRenderable(bb8Renderable);
-                  bb8.select();
+
+                  //rotate the model since it's facing downwards by default
+                  float[] upAxis = plane.getCenterPose().getYAxis();
+                  //Log.e(TAG, "upAxis" + upAxis[0] + upAxis[1] + upAxis[2]);
+                  Vector3 upDirection = new Vector3(-upAxis[0], -upAxis[1], -upAxis[2]);
+                  bb8.setLookDirection(upDirection);
+
+                  tn.select();
 
               });
-
-
   }
 }

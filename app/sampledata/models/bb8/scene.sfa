@@ -204,7 +204,7 @@
       ],
       file: "sampledata/models/bb8/scene.gltf",
       name: "scene",
-      scale: 0.5,
+      scale: 0.3,
       suggested_collision: {
          center: {
             x: 0,
