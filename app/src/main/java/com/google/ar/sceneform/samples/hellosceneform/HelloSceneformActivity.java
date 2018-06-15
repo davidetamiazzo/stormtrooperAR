@@ -45,7 +45,6 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
   private ArFragment arFragment;
   //private ModelRenderable andyRenderable;
-  private ModelRenderable stormRenderable;
   private ModelRenderable bb8Renderable;
 
   @Override
@@ -106,7 +105,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
       //trying to load bb8 renderable
       ModelRenderable.builder()
-              .setSource(this, R.raw.bb8)
+              .setSource(this, R.raw.andy)
               .build()
               .thenAccept(renderable -> bb8Renderable = renderable)
               .exceptionally(
@@ -153,4 +152,17 @@ public class HelloSceneformActivity extends AppCompatActivity {
 
               });
   }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Button colorDetectionBu = findViewById(R.id.colorDetection);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            colorDetectionBu.setVisibility(View.VISIBLE);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            colorDetectionBu.setVisibility(View.GONE);
+        }
+    }
 }

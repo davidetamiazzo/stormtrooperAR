@@ -64,14 +64,3 @@ sceneform.asset('sampledata/models/andy.obj',
         'default',
         'sampledata/models/andy.sfa',
         'src/main/res/raw/andy')
-
-sceneform.asset('sampledata/models/silverStorm/scene.gltf',
-        'default',
-        'sampledata/models/silverStorm/scene.sfa',
-        'src/main/res/raw/silverstorm')
-
-
-sceneform.asset('sampledata/models/bb8/scene.gltf',
-        'default',
-        'sampledata/models/bb8/scene.sfa',
-        'src/main/assets/bb8')
