@@ -15,6 +15,7 @@
  */
 package com.google.ar.sceneform.samples.hellosceneform;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -64,6 +65,14 @@ public class HelloSceneformActivity extends AppCompatActivity {
     {
         colorDetectionBu.setVisibility(View.GONE);
     }
+
+    colorDetectionBu.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent(HelloSceneformActivity.this, ColorDetectionActivity.class);
+            startActivity(i);
+        }
+    });
 /*
     // When you build a Renderable, Sceneform loads its resources in the background while returning
     // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
