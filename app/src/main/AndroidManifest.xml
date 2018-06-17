@@ -67,7 +67,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.google.ar.sceneform.samples.hellosceneform"
+            android:authorities="com.google.ar.sceneform.samples.hellosceneform.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

@@ -140,7 +140,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
         //trying to load bb8 renderable
 
         ModelRenderable.builder()
-              .setSource(this, R.raw.finn)
+              .setSource(this, R.raw.andy)
               .build()
               .thenAccept(renderable -> bb8Renderable = renderable)
               .exceptionally(
@@ -251,7 +251,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
                     File photoFile = new File(filename);
 
                     Uri photoURI = FileProvider.getUriForFile(HelloSceneformActivity.this,
-                            HelloSceneformActivity.this.getPackageName() + "",
+                            HelloSceneformActivity.this.getPackageName() + ".FileProvider",
                             photoFile);
                     Intent intent = new Intent(Intent.ACTION_VIEW, photoURI);
                     intent.setDataAndType(photoURI, "image/*");
