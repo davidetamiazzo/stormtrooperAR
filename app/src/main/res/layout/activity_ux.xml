@@ -25,12 +25,6 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/colorDetection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="Detect Color" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -49,24 +43,18 @@
             android:contentDescription="camera Click"
             app:srcCompat="@drawable/cameraclick" />
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="end">
-
         <ImageButton
-            android:id="@+id/cameraClickLand"
+            android:id="@+id/colorDetection"
             android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
+            android:layout_height="100dp"
             android:adjustViewBounds="true"
-            android:padding="5dp"
+            android:padding="10dp"
             android:scaleType="fitCenter"
             android:background="@android:color/transparent"
-            android:contentDescription="camera Click"
-            app:srcCompat="@drawable/cameraclick" />
+            android:layout_alignParentEnd="true"
+            android:contentDescription="detect Color"
+            app:srcCompat="@drawable/ic_launcher" />
+
 
     </RelativeLayout>
 

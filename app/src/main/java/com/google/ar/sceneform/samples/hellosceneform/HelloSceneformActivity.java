@@ -60,9 +60,8 @@ public class HelloSceneformActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ux);
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
 
-        ImageButton cameraButton = (ImageButton) findViewById(R.id.cameraClick);
-        Button colorDetectionBu = findViewById(R.id.colorDetection);
-        ImageButton cameraButtonLand = (ImageButton) findViewById(R.id.cameraClickLand);
+        ImageButton cameraButton = findViewById(R.id.cameraClick);
+        ImageButton colorDetectionBu = findViewById(R.id.colorDetection);
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,13 +78,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
             }
         });
 
-        cameraButtonLand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takePhoto();
-            }
-        });
-
+        /*
         //hide the button if the orientation is portrait
         Configuration newConfig = getResources().getConfiguration();
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -94,7 +87,6 @@ public class HelloSceneformActivity extends AppCompatActivity {
         }
         else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             colorDetectionBu.setVisibility(View.GONE);
-            cameraButtonLand.setVisibility(View.GONE);
         }
 
         /*
@@ -269,28 +261,25 @@ public class HelloSceneformActivity extends AppCompatActivity {
         }, new Handler(handlerThread.getLooper()));
     }
 
+    /*
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Button colorDetectionBu = findViewById(R.id.colorDetection);
-            ImageButton cameraButton = (ImageButton) findViewById(R.id.cameraClick);
-            ImageButton cameraButtonLand = (ImageButton) findViewById(R.id.cameraClickLand);
+            ImageButton colorDetectionBu = findViewById(R.id.colorDetection);
+            ImageButton cameraButton = findViewById(R.id.cameraClick);
 
             cameraButton.setVisibility(View.GONE);
             colorDetectionBu.setVisibility(View.VISIBLE);
-            cameraButtonLand.setVisibility(View.VISIBLE);
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            Button colorDetectionBu = findViewById(R.id.colorDetection);
+            ImageButton colorDetectionBu = findViewById(R.id.colorDetection);
             ImageButton cameraButton = (ImageButton) findViewById(R.id.cameraClick);
-            ImageButton cameraButtonLand = (ImageButton) findViewById(R.id.cameraClickLand);
 
             colorDetectionBu.setVisibility(View.GONE);
-            cameraButtonLand.setVisibility(View.GONE);
             cameraButton.setVisibility(View.VISIBLE);
         }
     }
-
+    */
 }
