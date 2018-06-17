@@ -1,18 +1,14 @@
 package com.google.ar.sceneform.samples.hellosceneform;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.support.v4.app.ActivityCompat;
+import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.Toast;
-
-
-import org.opencv.core.Core;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -32,6 +28,7 @@ import java.io.InputStream;
 
 public class ColorDetectionActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2{
 
+    public String TAG = "hellosceneform";
     private CameraBridgeViewBase openCvCameraBridge;
     private Mat mRgba;
 
@@ -39,7 +36,11 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
     private Mat hierarchy;
     private int maxcntID;
     private MatOfPoint maxcnt;
-    public int finalColor;
+    public String finalColor;
+    private int redFrame;
+    private int greenFrame;
+    private int foundColor;
+    private int missedFrames = 0;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -48,6 +49,7 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
             switch (status){
                 case LoaderCallbackInterface.SUCCESS:
                 {
+                    // caricare un modulo native
 
                     openCvCameraBridge.enableView();
                 }break;
@@ -65,20 +67,11 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_detection);
 
-        //requests camera
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA}, 1);
-
-        }
-
-
-
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         openCvCameraBridge = (CameraBridgeViewBase) findViewById(R.id.surfaceView);
         openCvCameraBridge.setVisibility(CameraBridgeViewBase.VISIBLE);
         openCvCameraBridge.setCvCameraViewListener(this);
+
     }
 
     @Override
@@ -100,12 +93,6 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
         }else{
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
-
-        //locks screen orientation to Landscape while using openCV
-        int currentOrientation = getResources().getConfiguration().orientation;
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        }
     }
 
     @Override
@@ -120,7 +107,10 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
         edges = new Mat();
         hierarchy = new Mat();
         maxcnt=new MatOfPoint();
-        finalColor =0;
+        finalColor="";
+        greenFrame=0;
+        redFrame=0;
+
 
     }
 
@@ -132,8 +122,10 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 
+        //barra di caricamento per progresso riconoscimento colore
+        ProgressBar pb = findViewById(R.id.loadingBar);
 
-
+        foundColor=0;
         //Trasformazione della camera frame in ogetto Mat
         mRgba = inputFrame.rgba();
         Mat mHSV = new Mat();
@@ -165,7 +157,6 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
 
                 matOfPoint2f.fromList(contour.toList());
                 //Calcolo del numero di angoli e del loro valore
-                //ApproxPolyDP approssima il poligono con meno vertice da un contorno
                 Imgproc.approxPolyDP(matOfPoint2f, approxCurve, Imgproc.arcLength(matOfPoint2f, true) * 0.02, true);
                 long total = approxCurve.total();
                 if (total >= 4 && total <= 6) {
@@ -177,7 +168,7 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
                     Collections.sort(cos);
                     Double minCos = cos.get(0);
                     Double maxCos = cos.get(cos.size() - 1);
-                    //considereare solo le forme con quattro angoli e con certi valori di coseno tra -0.1 e 0.3
+                    //considereare solo le forme con quattro angoli e con certi valori di coseni
                     boolean isRect = total == 4 && minCos >= -0.1 && maxCos <= 0.3;
                     if (isRect) {
                         //Si entra in questa zona solo se il contorno è un rettangolo
@@ -209,19 +200,19 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
                             //1: Rosso
                             //2: Verde
                             if(pixel[0]<50 && pixel[1] >120 && pixel[2]>20 && pixel[2]<210){
-                                //Nel caso si vuole vedere il contorno e la detezione del colore, un-comment le due linee seguenti
-                                Imgproc.putText (mRgba,"RED",new Point(10, 50),Core.FONT_HERSHEY_SIMPLEX ,1,new Scalar(255, 255, 255),4);
-                                Imgproc.drawContours(mRgba, contours, maxcntID, color, 5);
-                                finalColor=1;
 
+
+                                //Imgproc.putText (mRgba,"RED",new Point(10, 50),Core.FONT_HERSHEY_SIMPLEX ,1,new Scalar(255, 255, 255),4);
+                                //Imgproc.drawContours(mRgba, contours, maxcntID, color, 5);
+                                foundColor = 1;
                             }
-
-
                             else if(pixel[0]>37 && pixel[0]<100 && pixel[1] > 110 && pixel[2]>120){
-                                //Nel caso si vuole vedere il contorno e la detezione del colore, un-comment le due linee seguenti
-                                Imgproc.putText (mRgba,"GREEN",new Point(10, 50),Core.FONT_HERSHEY_SIMPLEX ,1,new Scalar(255, 255, 255),4);
-                                Imgproc.drawContours(mRgba, contours, maxcntID, color, 5);
-                                finalColor=2;
+
+
+                                //Imgproc.putText (mRgba,"GREEN",new Point(10, 50),Core.FONT_HERSHEY_SIMPLEX ,1,new Scalar(255, 255, 255),4);
+                                //Imgproc.drawContours(mRgba, contours, maxcntID, color, 5);
+                                foundColor = 2;
+
                             }
 
                         }
@@ -231,12 +222,53 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
 
                 }
             }
-
-
-
+            if(foundColor==1){
+                if(redFrame<32){
+                    redFrame++;
+                    //sets progress bar percentage
+                    pb.setProgress(redFrame*3);
+                }
+                else{
+                    Imgproc.putText (mRgba,"RED",new Point(10, 50),Core.FONT_HERSHEY_SIMPLEX ,1,new Scalar(255, 0,0),4);
+                    foundColor=1;
+                    finalColor = "RED";
+                }
+            }
+            else if(foundColor==2){
+                if(greenFrame<32){
+                    greenFrame++;
+                    //sets progress bar percentage
+                    pb.setProgress(redFrame*3);
+                }
+                else{
+                    Imgproc.putText (mRgba,"GREEN",new Point(10, 50),Core.FONT_HERSHEY_SIMPLEX ,1,new Scalar(0, 255, 0),4);
+                    foundColor=2;
+                    finalColor = "GREEN";
+                }
+            }
 
         }
 
+        if(foundColor == 0)
+        {
+            missedFrames++;
+            if (missedFrames > 4)
+            {
+                Log.e(TAG, "missedFrames>4");
+                greenFrame = 0; redFrame = 0; missedFrames = 0;
+                pb.setProgress(0);
+            }
+        }
+        foundColor = 0;
+        Log.e(TAG, "foundColor " + foundColor + " missedFrames " + missedFrames);
+
+
+        //passa colore ad activity di Sceneform, dove verrà applicato conseguentemente il filtro
+        if (finalColor != "") {
+                    Intent i = new Intent( ColorDetectionActivity.this, HelloSceneformActivity.class);
+                    i.putExtra("color", finalColor);
+                    startActivity(i);
+        }
         return mRgba;
 
     }
@@ -247,10 +279,6 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
         double dy2 = pt2.y - pt0.y;
         return (dx1*dx2 + dy1*dy2)/Math.sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
     }
-
-
-
-
 
 
 }

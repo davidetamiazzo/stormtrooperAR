@@ -12,4 +12,12 @@
         tools:layout_editor_absoluteX="153dp"
         tools:layout_editor_absoluteY="246dp" />
 
+    <ProgressBar
+        android:id="@+id/loadingBar"
+        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:progress="0"/>
+
 </FrameLayout>

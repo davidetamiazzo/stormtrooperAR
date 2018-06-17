@@ -65,3 +65,13 @@ sceneform.asset('sampledata/models/andy.obj',
         'default',
         'sampledata/models/andy.sfa',
         'src/main/res/raw/andy')
+
+sceneform.asset('../app/sampledata/models/finn/finn.obj',
+        'default',
+        '../app/sampledata/models/finn/finn.sfa',
+        '../app/src/main/res/raw/finn')
+
+sceneform.asset('../app/sampledata/models/bb8/bb8.obj',
+        'default',
+        '../app/sampledata/models/bb8/bb8.sfa',
+        '../app/src/main/res/raw/bb8')

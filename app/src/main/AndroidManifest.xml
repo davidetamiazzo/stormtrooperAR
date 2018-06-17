@@ -17,8 +17,8 @@
     package="com.google.ar.sceneform.samples.hellosceneform">
 
     <!-- Always needed for AR. -->
-
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!--
          This tag indicates that this application requires ARCore. This results in the application
         only being visible in the Google Play Store on devices that support ARCore.
@@ -46,9 +46,9 @@
 
         <activity
             android:name=".HelloSceneformActivity"
-            android:configChanges="orientation|screenSize"
             android:exported="true"
             android:label="@string/app_name"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.NoActionBar">
 
             <!-- android:screenOrientation="locked" deleted -->
@@ -61,9 +61,20 @@
 
         <activity android:name=".ColorDetectionActivity"
             android:label="@string/app_name"
+            android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-
         </activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.google.ar.sceneform.samples.hellosceneform"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/paths"/>
+        </provider>
+
     </application>
 
 </manifest>
