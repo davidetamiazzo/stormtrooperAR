@@ -1,6 +1,7 @@
 package com.google.ar.sceneform.samples.hellosceneform;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import java.lang.*;
 
 public class ColorDetectionActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2{
 
+    private final String TAG = "ColorDetection";
     private CameraBridgeViewBase openCvCameraBridge;
     private Mat mRgba;
 
@@ -235,7 +237,6 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
                     Imgproc.putText (mRgba,"RED",new Point(10, 50),Core.FONT_HERSHEY_SIMPLEX ,1,new Scalar(255, 0,0),4);
                     foundColor=1;
                     finalColor = "RED";
-                    onDestroy();
                 }
             }
             else if(foundColor==2){
@@ -252,7 +253,6 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
                     Imgproc.putText (mRgba,"GREEN",new Point(10, 50),Core.FONT_HERSHEY_SIMPLEX ,1,new Scalar(0, 255, 0),4);
                     foundColor=2;
                     finalColor = "GREEN";
-                    onDestroy();
                 }
             }
 
@@ -262,7 +262,7 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
         {
             //resetta la status bar se per alcuni frame consecutivi non rileviamo colore e forma
             missedFrames++;
-            if (missedFrames > 7)
+            if (missedFrames > 10)
             {
                 //Log.e(TAG, "missedFrames>4");
                 greenFrame = 0; redFrame = 0; missedFrames = 0;
@@ -270,7 +270,14 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
             }
         }
 
-        //Log.e(TAG, "foundColor " + foundColor + " missedFrames " + missedFrames);
+        if (finalColor.equals("GREEN") || finalColor.equals("RED"))
+        {
+            Log.e(TAG, "final Color " + finalColor);
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("COLOR", finalColor);
+            setResult(HelloSceneformActivity.RESULT_OK, returnIntent);
+            finish();
+        }
 
         return mRgba;
 

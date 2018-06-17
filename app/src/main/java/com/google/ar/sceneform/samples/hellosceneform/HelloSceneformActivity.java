@@ -1,6 +1,7 @@
 package com.google.ar.sceneform.samples.hellosceneform;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -45,6 +46,8 @@ import java.util.Date;
  */
 public class HelloSceneformActivity extends AppCompatActivity {
     private static final String TAG = "hellosceneform";
+    private static final int COLOR = 1;
+    private String detectedColor = "";
 
     private ArFragment arFragment;
     //private ModelRenderable andyRenderable;
@@ -74,20 +77,11 @@ public class HelloSceneformActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(HelloSceneformActivity.this, ColorDetectionActivity.class);
-                startActivity(i);
+                startActivityForResult(i, COLOR);
             }
         });
 
-        /*
-        //hide the button if the orientation is portrait
-        Configuration newConfig = getResources().getConfiguration();
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
-        {
-            cameraButton.setVisibility(View.GONE);
-        }
-        else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            colorDetectionBu.setVisibility(View.GONE);
-        }
+
 
         /*
 
@@ -155,6 +149,9 @@ public class HelloSceneformActivity extends AppCompatActivity {
                       return;
                   }
 
+                  //sets the hitPose higher for bb8
+                  //Pose.makeTranslation(0, 0.5f, 0).compose(hitResult.getHitPose());
+
                   // Create the Anchor.
                   Anchor anchor = hitResult.createAnchor();
                   AnchorNode anchorNode = new AnchorNode(anchor);
@@ -178,6 +175,18 @@ public class HelloSceneformActivity extends AppCompatActivity {
                   tn.select();
 
               });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //always use in portrait mode
+        Configuration newConfig = getResources().getConfiguration();
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+        }
+
     }
 
     @Override
@@ -282,4 +291,18 @@ public class HelloSceneformActivity extends AppCompatActivity {
         }
     }
     */
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == COLOR) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                detectedColor = data.getStringExtra("COLOR");
+                Toast toast = Toast.makeText(HelloSceneformActivity.this,
+                        "The detected color was " + detectedColor, Toast.LENGTH_LONG);
+                toast.show();
+            }
+        }
+    }
 }
