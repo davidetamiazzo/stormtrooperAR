@@ -48,10 +48,11 @@ public class HelloSceneformActivity extends AppCompatActivity {
     private static final String TAG = "hellosceneform";
     private static final int COLOR = 1;
     private String detectedColor = "";
+    private int model = 1;
 
     private ArFragment arFragment;
     //private ModelRenderable andyRenderable;
-    private ModelRenderable bb8Renderable;
+    private ModelRenderable myRenderable;
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -81,67 +82,48 @@ public class HelloSceneformActivity extends AppCompatActivity {
             }
         });
 
-
-
-        /*
+        //get model selected from first activity
+        Intent intent = getIntent();
+        model = intent.getIntExtra("model", 1);
 
         // When you build a Renderable, Sceneform loads its resources in the background while returning
         // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
-        ModelRenderable.builder()
-            .setSource(this, R.raw.andy)
-            .build()
-            .thenAccept(renderable -> andyRenderable = renderable)
-            .exceptionally(
-                throwable -> {
-                  Toast toast =
-                      Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG);
-                  toast.setGravity(Gravity.CENTER, 0, 0);
-                  toast.show();
-                  return null;
-                });
 
-        arFragment.setOnTapArPlaneListener(
-            (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
-              if (andyRenderable == null) {
-                return;
-              }
+        if (model == 1) {
 
-              if (plane.getType() != Type.HORIZONTAL_UPWARD_FACING) {
-                return;
-              }
 
-              // Create the Anchor.
-              Anchor anchor = hitResult.createAnchor();
-              AnchorNode anchorNode = new AnchorNode(anchor);
-              anchorNode.setParent(arFragment.getArSceneView().getScene());
-
-              // Create the transformable andy and add it to the anchor.
-              TransformableNode andy = new TransformableNode(arFragment.getTransformationSystem());
-              andy.setParent(anchorNode);
-              andy.setRenderable(andyRenderable);
-              andy.select();
-         });
-        */
-
-        //trying to load bb8 renderable
-
-        ModelRenderable.builder()
-              .setSource(this, R.raw.andy)
-              .build()
-              .thenAccept(renderable -> bb8Renderable = renderable)
-              .exceptionally(
-                      throwable -> {
-                          Toast toast =
-                                  Toast.makeText(this, "Unable to load bb8 renderable", Toast.LENGTH_LONG);
-                          toast.setGravity(Gravity.CENTER, 0, 0);
-                          toast.show();
-                          return null;
-                      });
-
+            ModelRenderable.builder()
+                    .setSource(this, R.raw.stormtrooper)
+                    .build()
+                    .thenAccept(renderable -> myRenderable = renderable)
+                    .exceptionally(
+                            throwable -> {
+                                Toast toast =
+                                        Toast.makeText(this, "Unable to load bb8 renderable", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+                                return null;
+                            });
+        }
+        else //model == 2
+        {
+            ModelRenderable.builder()
+                    .setSource(this, R.raw.bb8)
+                    .build()
+                    .thenAccept(renderable -> myRenderable = renderable)
+                    .exceptionally(
+                            throwable -> {
+                                Toast toast =
+                                        Toast.makeText(this, "Unable to load bb8 renderable", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+                                return null;
+                            });
+        }
 
         arFragment.setOnTapArPlaneListener(
               (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
-                  if (bb8Renderable == null) {
+                  if (myRenderable == null) {
                       return;
                   }
 
@@ -149,11 +131,20 @@ public class HelloSceneformActivity extends AppCompatActivity {
                       return;
                   }
 
-                  //sets the hitPose higher for bb8
-                  //Pose.makeTranslation(0, 0.5f, 0).compose(hitResult.getHitPose());
+                  //sets the hitPose higher for stormtrooper and bb8 since they're not imported in proper position
+                  Anchor anchor;
+                  if (model == 1) {
+                      anchor = hitResult.getTrackable().createAnchor(
+                              hitResult.getHitPose().compose(Pose.makeTranslation(0, 0.5f, 0)));
+                  }
+
+                  else //model == 2
+                      anchor = anchor = hitResult.getTrackable().createAnchor(
+                              hitResult.getHitPose().compose(Pose.makeTranslation(0, -0.13f, 0f)));
+
 
                   // Create the Anchor.
-                  Anchor anchor = hitResult.createAnchor();
+                  //Anchor anchor = hitResult.createAnchor();
                   AnchorNode anchorNode = new AnchorNode(anchor);
                   anchorNode.setAnchor(anchor);
                   anchorNode.setParent(arFragment.getArSceneView().getScene());
@@ -161,18 +152,19 @@ public class HelloSceneformActivity extends AppCompatActivity {
                   // Create the transformable node and add it to the anchor.
                   TransformableNode tn = new TransformableNode(arFragment.getTransformationSystem());
                   tn.setParent(anchorNode);
+                  tn.setRenderable(myRenderable);
+                  tn.select();
 
-                  //We need to create an additional Node to tn to rotate the 3d model without rotating the transformation system
+                  /*
+                  //We need to create an additional Node to tn to rotate the 3d model without
+                  // rotating the transformation system
                   Node bb8 = new Node();
                   bb8.setParent(tn);
-                  bb8.setRenderable(bb8Renderable);
-
                   //rotate the model since it's facing downwards by default
                   float[] upAxis = plane.getCenterPose().getYAxis();
                   Vector3 upDirection = new Vector3(-upAxis[0], -upAxis[1], -upAxis[2]);
-                  //bb8.setLookDirection(upDirection);
-
-                  tn.select();
+                  bb8.setLookDirection(upDirection);
+                    */
 
               });
     }
@@ -198,6 +190,7 @@ public class HelloSceneformActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        arFragment.onDestroy();
     }
 
     private String generateFilename() {
