@@ -19,7 +19,7 @@ public class SelectionActivity extends AppCompatActivity {
         model1Bu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(SelectionActivity.this, HelloSceneformActivity.class);
+                Intent i = new Intent(SelectionActivity.this, SceneformActivity.class);
                 i.putExtra("model", 1);
                 startActivity(i);
             }
@@ -28,7 +28,7 @@ public class SelectionActivity extends AppCompatActivity {
         model2Bu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(SelectionActivity.this, HelloSceneformActivity.class);
+                Intent i = new Intent(SelectionActivity.this, SceneformActivity.class);
                 i.putExtra("model", 2);
                 startActivity(i);
             }

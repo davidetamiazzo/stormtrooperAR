@@ -1,6 +1,5 @@
 package com.google.ar.sceneform.samples.hellosceneform;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -60,7 +58,7 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_detection);
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         openCvCameraBridge = (CameraBridgeViewBase) findViewById(R.id.surfaceView);
         openCvCameraBridge.setVisibility(CameraBridgeViewBase.VISIBLE);
         openCvCameraBridge.setCvCameraViewListener(this);
@@ -88,9 +86,13 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
 
         //locks screen orientation to Landscape while using openCV
         int currentOrientation = getResources().getConfiguration().orientation;
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
         }
+
+        //hide the status bar to make it look like we are in portrait mode
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
@@ -275,7 +277,7 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
             Log.e(TAG, "final Color " + finalColor);
             Intent returnIntent = new Intent();
             returnIntent.putExtra("COLOR", finalColor);
-            setResult(HelloSceneformActivity.RESULT_OK, returnIntent);
+            setResult(SceneformActivity.RESULT_OK, returnIntent);
             finish();
         }
 
