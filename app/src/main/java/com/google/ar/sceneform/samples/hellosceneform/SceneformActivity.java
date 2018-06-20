@@ -36,14 +36,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * This is an activity that uses the Sceneform UX package to make common AR tasks easier.
+/*
+ * This is an activity that uses the Sceneform UX package to place 3D models on a surface.
  */
 public class SceneformActivity extends AppCompatActivity {
-    private static final String TAG = "hellosceneform";
-    private static final int COLOR = 1;
-    private String detectedColor = "";
-    private int model = 1;
+
+    private static final String TAG = "sceneform"; //for Log purposes
+    private static final int COLOR = 1; //request code necessary in onActivityResult, which handles the detected color
+    private int model; //1 for the Stormtrooper, 2 for BB8
 
     private ArFragment arFragment;
     private ModelRenderable myRenderable;
@@ -68,6 +68,8 @@ public class SceneformActivity extends AppCompatActivity {
             }
         });
 
+        //set the button on the left to start the color detection
+        //it will return an event caught in onActivityResult
         colorDetectionBu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,13 +82,12 @@ public class SceneformActivity extends AppCompatActivity {
         Intent intent = getIntent();
         model = intent.getIntExtra("model", 1);
 
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //always use in portrait mode
+        //always use in portrait mode, the buttons are symmetric so can be used in landscape without any difference
         Configuration newConfig = getResources().getConfiguration();
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
         {
@@ -94,11 +95,11 @@ public class SceneformActivity extends AppCompatActivity {
         }
 
         // When you build a Renderable, Sceneform loads its resources in the background while returning
-        // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
+        // a CompletableFuture. Call thenAccept() which sets the new "stage" in the CompletableFuture.
+        // In this case, the last action to be performed is loading the Renderable. In case of failure, Toast
 
+        //load the Stormtrooper model
         if (model == 1) {
-
-
             ModelRenderable.builder()
                     .setSource(this, R.raw.stormtrooper)
                     .build()
@@ -112,7 +113,7 @@ public class SceneformActivity extends AppCompatActivity {
                                 return null;
                             });
         }
-        else //model == 2
+        else //model == 2, BB8
         {
             ModelRenderable.builder()
                     .setSource(this, R.raw.bb8)
@@ -128,6 +129,7 @@ public class SceneformActivity extends AppCompatActivity {
                             });
         }
 
+        //set the tap listener directly from the fragment, which handles taps on the flat surfaces detected
         arFragment.setOnTapArPlaneListener(
                 (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
                     if (myRenderable == null) {
@@ -138,7 +140,8 @@ public class SceneformActivity extends AppCompatActivity {
                         return;
                     }
 
-                    //sets the hitPose higher for stormtrooper and bb8 since they're not imported in proper position
+                    // Set the hitPose higher for stormtrooper and bb8 since they are not imported in proper position
+                    // Create the Anchor first
                     Anchor anchor;
                     if (model == 1) {
                         anchor = hitResult.getTrackable().createAnchor(
@@ -146,17 +149,16 @@ public class SceneformActivity extends AppCompatActivity {
                     }
 
                     else //model == 2
-                        anchor = anchor = hitResult.getTrackable().createAnchor(
+                        anchor  = hitResult.getTrackable().createAnchor(
                                 hitResult.getHitPose().compose(Pose.makeTranslation(0, -0.13f, 0f)));
 
 
-                    // Create the Anchor.
-                    //Anchor anchor = hitResult.createAnchor();
+                    //The AnchorNode automatically detects the world space coordinates in the Anchor location
                     AnchorNode anchorNode = new AnchorNode(anchor);
                     anchorNode.setAnchor(anchor);
                     anchorNode.setParent(arFragment.getArSceneView().getScene());
 
-                    // Create the transformable node and add it to the anchor.
+                    // Create the transformable node and add it to the anchor, and attach the Renderable to it
                     TransformableNode tn = new TransformableNode(arFragment.getTransformationSystem());
                     tn.setParent(anchorNode);
                     tn.setRenderable(myRenderable);
@@ -178,6 +180,7 @@ public class SceneformActivity extends AppCompatActivity {
         arFragment.onDestroyView();
     }
 
+    //used in takePhoto, generates the file name with extension .jpg
     private String generateFilename() {
         String date =
                 new SimpleDateFormat("yyyyMMddHHmmss", java.util.Locale.getDefault()).format(new Date());
@@ -185,12 +188,16 @@ public class SceneformActivity extends AppCompatActivity {
                 Environment.DIRECTORY_PICTURES) + File.separator + "Sceneform/" + date + "_screenshot.jpg";
     }
 
+    //used in takePhoto, we write the bitmap created to the selected location
     private void saveBitmapToDisk(Bitmap bitmap, String filename) throws IOException {
 
         File out = new File(filename);
         if (!out.getParentFile().exists()) {
             out.getParentFile().mkdirs();
         }
+
+        //The writing passes through a ByteArrayOutputStream, which gets the result of the JPEG compression
+        //Then the compressed stream is passed to a FileOutputStream, which can write to the specific location
         try (FileOutputStream outputStream = new FileOutputStream(filename);
              ByteArrayOutputStream outputData = new ByteArrayOutputStream()) {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputData);
@@ -198,22 +205,22 @@ public class SceneformActivity extends AppCompatActivity {
             outputStream.flush();
             outputStream.close();
         } catch (IOException ex) {
-            throw new IOException("Failed to save bitmap to disk", ex);
+            throw new IOException("Failed to save bitmap to disk", ex); //pass the exception to the father method
         }
     }
 
     private void takePhoto() {
         final String filename = generateFilename();
-        ArSceneView view = arFragment.getArSceneView();
+        ArSceneView view = arFragment.getArSceneView(); //the actual image being shown at the moment
 
         // Create a bitmap the size of the scene view.
         final Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),
                 Bitmap.Config.ARGB_8888);
 
-        // Create a handler thread to offload the processing of the image.
+        // Create a handler thread to offload the processing of the image
         final HandlerThread handlerThread = new HandlerThread("PixelCopier");
         handlerThread.start();
-        // Make the request to copy.
+        // Make the request to copy
         PixelCopy.request(view, bitmap, (copyResult) -> {
             if (copyResult == PixelCopy.SUCCESS) {
                 try {
@@ -224,6 +231,8 @@ public class SceneformActivity extends AppCompatActivity {
                     toast.show();
                     return;
                 }
+
+                //Show snackbar to inform that the photo was taken, and allows to see it
                 Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
                         "Photo saved", Snackbar.LENGTH_LONG);
                 snackbar.setAction("Open in Photos", v -> {
@@ -251,16 +260,14 @@ public class SceneformActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String detectedColor = "";
+
         // Check which request we're responding to
         if (requestCode == COLOR) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 detectedColor = data.getStringExtra("COLOR");
-                /*
-                Toast toast = Toast.makeText(SceneformActivity.this,
-                        "The detected color was " + detectedColor, Toast.LENGTH_LONG);
-                toast.show();
-                */
+
                 if (detectedColor.equals("RED"))
                 {
                     model = 1; //stormtrooper

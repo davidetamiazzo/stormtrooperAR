@@ -1,12 +1,16 @@
 package com.google.ar.sceneform.samples.hellosceneform;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -22,7 +26,7 @@ import java.lang.*;
 
 public class ColorDetectionActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2{
 
-    private final String TAG = "ColorDetection";
+    private final String TAG = "ColorDetection"; //for Log purposes
     private CameraBridgeViewBase openCvCameraBridge;
     private Mat mRgba;
 
@@ -40,8 +44,6 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
             switch (status){
                 case LoaderCallbackInterface.SUCCESS:
                 {
-                    // caricare un modulo native
-
                     openCvCameraBridge.enableView();
                 }break;
                 default:{
@@ -57,7 +59,24 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
         System.loadLibrary("opencv_java3");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_detection);
+        ImageButton info = findViewById(R.id.info_button);
 
+        //set an info button to explain the functioning of the color detection in an AlertDialog
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(ColorDetectionActivity.this);
+                alertDialog.setTitle("Color Detection");
+                alertDialog.setMessage(R.string.info_color_detection);
+                alertDialog.setNeutralButton("GOT IT!",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.create().show();
+                }
+        });
 
         openCvCameraBridge = (CameraBridgeViewBase) findViewById(R.id.surfaceView);
         openCvCameraBridge.setVisibility(CameraBridgeViewBase.VISIBLE);
@@ -101,6 +120,7 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
         openCvCameraBridge.disableView();
     }
 
+    //necessary override in openCV
     @Override
     public void onCameraViewStarted(int width, int height) {
         mRgba = new Mat();
@@ -113,6 +133,7 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
 
     }
 
+    //necessary override in openCV
     @Override
     public void onCameraViewStopped() {
         mRgba.release();
@@ -272,6 +293,7 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
             }
         }
 
+        //pass the result back to the calling Activity
         if (finalColor.equals("GREEN") || finalColor.equals("RED"))
         {
             Log.e(TAG, "final Color " + finalColor);
@@ -284,6 +306,8 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
         return mRgba;
 
     }
+
+
     private double angle(Point pt1, Point pt2, Point pt0) {
         double dx1 = pt1.x - pt0.x;
         double dy1 = pt1.y - pt0.y;

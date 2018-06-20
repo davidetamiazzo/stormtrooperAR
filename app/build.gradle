@@ -47,11 +47,6 @@ dependencies {
 
 apply plugin: 'com.google.ar.sceneform.plugin'
 
-sceneform.asset('sampledata/models/andy.obj',
-        'default',
-        'sampledata/models/andy.sfa',
-        'src/main/res/raw/andy')
-
 sceneform.asset('../app/sampledata/models/bb8/bb8.gltf',
         'default',
         '../app/sampledata/models/bb8/bb8.sfa',

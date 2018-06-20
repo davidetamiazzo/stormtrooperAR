@@ -1,3 +1,6 @@
+/*
+* Thi class allows the user to select the model and passes the information to the AR activity
+*/
 package com.google.ar.sceneform.samples.hellosceneform;
 
 import android.content.Intent;

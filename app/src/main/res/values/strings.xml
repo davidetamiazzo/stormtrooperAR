@@ -7,6 +7,7 @@
     <string name="model1">Model 1 Selection Button</string>
     <string name="model2">Model 2 Selection Button</string>
     <string name="select_model">Select your model</string>
-    <string name="color_detect_info">While using the app, click this button and scan a red or green rectangle with your phone. The color detector will apply a filter to your screen.</string>
-    <string name="death_star">Death Star Filter</string>
+    <string name="color_detect_info">While using the app, click this button and scan a red or green rectangle with your phone. The color detector will switch model consequently.</string>
+    <string name="info_button">Info Button in ColorDetectionActivity</string>
+    <string name="info_color_detection">Choose your side! Scan a red or green rectangle with your camera, and switch the 3D model. Scan a GREEN rectangle for activating the BB8 model, and a RED rectangle for the Stormtrooper.</string>
 </resources>

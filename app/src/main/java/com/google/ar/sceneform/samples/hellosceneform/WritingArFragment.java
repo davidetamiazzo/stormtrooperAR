@@ -1,7 +1,9 @@
+/*
+* This class overwrites the ArFragment to allow the writing in external storage to take pictures
+*/
 package com.google.ar.sceneform.samples.hellosceneform;
 
 import android.Manifest;
-import android.util.Log;
 
 import com.google.ar.sceneform.ux.ArFragment;
 
