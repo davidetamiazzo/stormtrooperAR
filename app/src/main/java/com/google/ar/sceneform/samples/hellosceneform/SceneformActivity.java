@@ -49,9 +49,6 @@ public class SceneformActivity extends AppCompatActivity {
     private ModelRenderable myRenderable;
 
     @Override
-    @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
-    // CompletableFuture requires api level 24
-    // FutureReturnValueIgnored is not valid
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -85,6 +82,9 @@ public class SceneformActivity extends AppCompatActivity {
     }
 
     @Override
+    @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
+    // CompletableFuture requires api level 24
+    // FutureReturnValueIgnored is not valid
     protected void onResume() {
         super.onResume();
         //always use in portrait mode, the buttons are symmetric so can be used in landscape without any difference
@@ -140,12 +140,12 @@ public class SceneformActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // Set the hitPose higher for stormtrooper and bb8 since they are not imported in proper position
+                    // Set the hitPose higher for stormtrooper (1) and bb8 (2) since they are not imported in proper position
                     // Create the Anchor first
                     Anchor anchor;
                     if (model == 1) {
                         anchor = hitResult.getTrackable().createAnchor(
-                                hitResult.getHitPose().compose(Pose.makeTranslation(0, 0.7f, 0)));
+                                hitResult.getHitPose().compose(Pose.makeTranslation(0, 1.05f, 0)));
                     }
 
                     else //model == 2

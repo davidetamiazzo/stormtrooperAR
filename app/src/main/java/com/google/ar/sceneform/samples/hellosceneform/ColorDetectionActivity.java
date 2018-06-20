@@ -83,6 +83,7 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
         openCvCameraBridge.setCvCameraViewListener(this);
     }
 
+    //pause camera resource
     @Override
     public void onPause()
     {
@@ -114,6 +115,7 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
+    //release resources
     @Override
     public void onDestroy(){
         super.onDestroy();
@@ -142,45 +144,44 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 
+        //Creation of a progress bar
         ProgressBar pb = findViewById(R.id.loadingBar);
         int foundColor = 0;
-        //Trasformazione della camera frame in ogetto Mat
+
+        //conversion from frame to Mat
         mRgba = inputFrame.rgba();
         Mat mHSV = new Mat();
         Mat HSVcopy = new Mat();
-        //Mat Blurred = new Mat();
         Mat BlueTresh= new Mat();
         Mat GreenTresh = new Mat();
-        //Conversione della frame in HSV
-        //Imgproc.GaussianBlur(mRgba,Blurred,new Size(45,45),0);
+
+        //Conversion Mat frame to HSV
         Imgproc.cvtColor(mRgba, mHSV, Imgproc.COLOR_RGB2HSV_FULL);
         mHSV.copyTo(HSVcopy);
+        //Remove everything from the frame that is not in those range of colors (red and green)
         Core.inRange(HSVcopy,new Scalar(0,154,164),new Scalar(31,255,255),BlueTresh);
         Core.inRange(HSVcopy,new Scalar(37,110,120),new Scalar(100,255,255),GreenTresh);
 
         List<MatOfPoint> Gcontours = new ArrayList<>();
         List<MatOfPoint> Bcontours = new ArrayList<>();
-        //Creazione di un array di contorni
+
+        //Create a list of contours of the tresholded image
         Imgproc.findContours(GreenTresh, Gcontours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
         Imgproc.findContours(BlueTresh, Bcontours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
         MatOfPoint2f matOfPoint2f = new MatOfPoint2f();
         MatOfPoint2f approxCurve = new MatOfPoint2f();
 
 
-        //assicurarsi che almeno un contorno sia trovato
+        //Make sure that at least one red contour is found
         if (!Bcontours.isEmpty()) {
-            //percorrere tutti i contorni
+            //Go through every red contour
             for (int idx = 0; idx<Bcontours.size(); idx ++) {
 
                 MatOfPoint contour = Bcontours.get(idx);
-                //trovare il rettangolo piu piccolo che circonda il contorno
-                Rect rect = Imgproc.boundingRect(contour);
                 double contourArea = Imgproc.contourArea(contour);
-
-
-
                 matOfPoint2f.fromList(contour.toList());
-                //Calcolo del numero di angoli e del loro valore
+
+                //Calculations of the number of angles and their value
                 Imgproc.approxPolyDP(matOfPoint2f, approxCurve, Imgproc.arcLength(matOfPoint2f, true) * 0.02, true);
                 long total = approxCurve.total();
                 if (total >= 4 && total <= 6) {
@@ -192,15 +193,16 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
                     Collections.sort(cos);
                     Double minCos = cos.get(0);
                     Double maxCos = cos.get(cos.size() - 1);
-                    //considereare solo le forme con quattro angoli e con certi valori di coseni
+                    //We keep only the corners shapes with specific angle ranges
                     boolean isRect = total == 4 && minCos >= -0.1 && maxCos <= 0.3;
                     if (isRect) {
                         if(contourArea>100){
                             Imgproc.drawContours(mRgba, Bcontours, idx, new Scalar(255, 0, 0), 5);
-                            //ci interessano solo i rettangoli di una certa grandezza (evitare parassiti)
+                            //we take only "big shapes" to avoid parasites
+                            //and draw the contour on the feed
                             maxcntID =idx;
-                            Scalar color = new Scalar(0, 0, 255);
 
+                            //foundColor indicates what color was found
                             foundColor = 1;
 
                         }
@@ -211,8 +213,10 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
                 }
             }
         }
+
+        //Again but for the green shapes
         if (!Gcontours.isEmpty()) {
-            //percorrere tutti i contorni
+
             for (int idx = 0; idx<Gcontours.size(); idx ++) {
 
                 MatOfPoint contour = Gcontours.get(idx);
@@ -222,7 +226,6 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
 
 
                 matOfPoint2f.fromList(contour.toList());
-                //Calcolo del numero di angoli e del loro valore
                 Imgproc.approxPolyDP(matOfPoint2f, approxCurve, Imgproc.arcLength(matOfPoint2f, true) * 0.02, true);
                 long total = approxCurve.total();
                 if (total >= 4 && total <= 6) {
@@ -234,7 +237,6 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
                     Collections.sort(cos);
                     Double minCos = cos.get(0);
                     Double maxCos = cos.get(cos.size() - 1);
-                    //considereare solo le forme con quattro angoli e con certi valori di coseni
                     boolean isRect = total == 4 && minCos >= -0.1 && maxCos <= 0.3;
                     if (isRect) {
                         if(contourArea>100){
@@ -249,8 +251,10 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
             }
         }
         if(!Gcontours.isEmpty() || !Bcontours.isEmpty()) {
+            //Save the value of the found color in order to send it to the main activity
             if(foundColor==1){
                 Imgproc.drawContours(mRgba, Bcontours, maxcntID, new Scalar(255, 0, 0), 5);
+                //to be sure that it was not a parasite, we want the shape to be detected 33 frames in a row
                 if(redFrame<33){
                     redFrame++;
                     //sets progress bar percentage
@@ -259,6 +263,7 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
                 else{
                     Imgproc.putText (mRgba,"RED",new Point(10, 50),Core.FONT_HERSHEY_SIMPLEX ,1,new Scalar(255, 0,0),4);
                     foundColor=1;
+                    //this is the value sent to the main activity
                     finalColor = "RED";
                 }
             }
@@ -283,7 +288,7 @@ public class ColorDetectionActivity extends AppCompatActivity implements CameraB
 
         if(foundColor == 0)
         {
-            //resetta la status bar se per alcuni frame consecutivi non rileviamo colore e forma
+            //If too many frames are missed, we reset the progress bar
             missedFrames++;
             if (missedFrames > 10)
             {
